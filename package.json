@@ -2,6 +2,7 @@
   "name": "remix-vite-with-streaming",
   "private": true,
   "sideEffects": false,
+  "proxy": "https://api.football-data.org/",
   "type": "module",
   "scripts": {
     "build": "remix vite:build",

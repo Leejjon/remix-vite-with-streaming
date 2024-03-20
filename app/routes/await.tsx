@@ -1,6 +1,5 @@
 import { defer, type MetaFunction } from "@remix-run/node";
-import { Await, useLoaderData } from "@remix-run/react";
-import { Suspense } from "react";
+import { useLoaderData } from "@remix-run/react";
 import { MatchesResponse} from "~/model/Match";
 
 const { REACT_APP_FOOTBALL_API_KEY } = process.env;
@@ -18,9 +17,9 @@ export type Endereco = {
   street: string;
 };
 
-// function delay(ms: number) {
-//   return new Promise((resolve) => setTimeout(resolve, ms));
-// }
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export async function loader() {
   if (!REACT_APP_FOOTBALL_API_KEY) {
@@ -35,11 +34,12 @@ export async function loader() {
     }
   };
 
-  const response: Promise<MatchesResponse> = fetch("https://api.football-data.org/v4/competitions/2003/matches", fetchOptions).then((res) => res.json());
+  
+  const response: MatchesResponse = await fetch("https://api.football-data.org/v4/competitions/2003/matches", fetchOptions).then((res) => res.json());
 
-  const feriados: Promise<Feriado[]> = fetch(
+  const feriados: Feriado[] = await fetch(
     "https://brasilapi.com.br/api/feriados/v1/2023"
-  ).then((res) => res.json());
+  ).then((res) => delay(5000).then(() => res.json()));
 
   return defer({
     feriados,
@@ -55,33 +55,21 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  const {feriados, response} =
+  const { feriados /*: promiseFeriados*/, response /*: promiseResponse*/} =
     useLoaderData<typeof loader>();
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
       <h1>Welcome to Remix</h1>
-      <Suspense fallback={<p>CARREGANDO FERIADOS</p>}>
-        <Await resolve={feriados}>
-          {(feriados) => (
             <ul>
               {feriados.map((feriado) => (
                 <li key={feriado.date}>{feriado.name}</li>
               ))}
             </ul>
-          )}
-        </Await>
-      </Suspense>
-      <Suspense fallback={<p>Eredivisie</p>}>
-        <Await resolve={response} errorElement={<p>Error</p>}>
-          {(response) => (
             <ul>
               {response.matches.map((match) => (
                 <li key={match.id}>{match.homeTeam.name} - {match.awayTeam.name}</li>
               ))}
             </ul>
-          )}
-        </Await>
-      </Suspense>
     </div>
   );
 }
