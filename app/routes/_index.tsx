@@ -3,7 +3,7 @@ import { Await, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 import { MatchesResponse} from "~/model/Match";
 
-const { REACT_APP_FOOTBALL_API_KEY } = process.env;
+const {REACT_APP_FOOTBALL_API_KEY} = process.env;
 
 export type Feriado = {
   name: string;
@@ -60,7 +60,7 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
       <h1>Welcome to Remix</h1>
-      <Suspense fallback={<p>CARREGANDO FERIADOS</p>}>
+      <Suspense fallback={<p>loading</p>}>
         <Await resolve={feriados}>
           {(feriados) => (
             <ul>

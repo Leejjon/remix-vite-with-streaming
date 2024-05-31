@@ -2,7 +2,7 @@ import { defer, type MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { MatchesResponse} from "~/model/Match";
 
-const { REACT_APP_FOOTBALL_API_KEY } = process.env;
+const {REACT_APP_FOOTBALL_API_KEY} = process.env;
 
 export type Feriado = {
   name: string;
@@ -34,7 +34,7 @@ export async function loader() {
     }
   };
 
-  
+
   const response: MatchesResponse = await fetch("https://api.football-data.org/v4/competitions/2003/matches", fetchOptions).then((res) => res.json());
 
   const feriados: Feriado[] = await fetch(
