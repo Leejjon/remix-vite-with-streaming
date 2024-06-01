@@ -122,6 +122,8 @@ function handleBrowserRequest(
           const stream = createReadableStreamFromReadable(body);
 
           responseHeaders.set("Content-Type", "text/html");
+          // Needed for App Engine flex only
+          responseHeaders.set("X-Accel-Buffering", "no");
 
           resolve(
             new Response(stream, {

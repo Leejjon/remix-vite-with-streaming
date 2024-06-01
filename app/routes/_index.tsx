@@ -12,8 +12,9 @@ function delay(ms: number) {
 }
 
 async function loadPokemon(pokemonId: number, pokemon: PokemonNameAndUrl): Promise<PokemonResponse> {
+    // This way every pokemon loads a little longer.
+    await delay(pokemonId * 100);
 
-    await delay(pokemonId * 100)
     return {id: pokemonId, name: pokemon.name} as PokemonResponse;
 }
 
